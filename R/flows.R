@@ -1,4 +1,4 @@
-#' exposure
+#' exposure_disperse
 #'
 #' Disperse flows throughout a network based on a input vectors of origin points
 #' and associated densities, and calculate resultant relative risk of exposure
@@ -18,7 +18,7 @@
 #' @return Modified version of graph with additonal `exposure` column added.
 #'
 #' @export
-exposure <- function (graph, from, dens, k = 500, tol = 1e-12)
+exposure_disperse <- function (graph, from, dens, k = 500, tol = 1e-12)
 {
     if (any (is.na (dens))) {
         dens [is.na (dens)] <- 0

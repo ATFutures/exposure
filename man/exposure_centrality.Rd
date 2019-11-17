@@ -4,22 +4,16 @@
 \alias{exposure_centrality}
 \title{exposure_centrality}
 \usage{
-exposure_centrality(net, dispersal = 20)
+exposure_centrality(net)
 }
 \arguments{
-\item{net}{An \code{sc}-class street network extracted with
-\code{dodgr::dodgr_streetnet_sc}.}
-
-\item{dispersal}{Range in metres over which vehicular emissions are
-effectively dispersed.}
+\item{net}{A \pkg{dodgr} network weighted for vehicular transport (that is,
+with \code{wt_profile = "motorcar"}).}
 }
 \value{
-A \code{dodgr} network with additional columns of 'centrality-veh' for
-vehicular centrality; 'centrality-ped' for pedestrian centrality; and
-'exposure' for relative risk from exposure of pedestrians to vehicular
-emissions.
+Modified version of same net with additional "centrality" column
+appended.
 }
 \description{
-Calculate time-based betweenness centrality for a street network, as routed
-either for vehicular or pedestrian transport.
+Calculate centrality for a street network
 }

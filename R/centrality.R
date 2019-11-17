@@ -1,10 +1,11 @@
-#' exposure_centrality
+#' exposure
 #'
 #' Calculate time-based betweenness centrality for a street network, as routed
 #' either for vehicular or pedestrian transport.
 #'
-#' @param net An `sc`-class street network extracted with
-#' `dodgr::dodgr_streetnet_sc`.
+#' @param net_p A \pkg{dodgr} network weighted for pedestrian transport
+#' @param net_v A \pkg{dodgr} network weighted for vehicular transport with an
+#' additional `centrality` column appended by \link{exposure_centrality}.
 #' @param dispersal Range in metres over which vehicular emissions are
 #' effectively dispersed.
 #' @return A `dodgr` network with additional columns of 'centrality-veh' for
@@ -13,21 +14,30 @@
 #' emissions.
 #'
 #' @export
-exposure_centrality <- function (net, dispersal = 20)
+exposure <- function (net_p, net_v, dispersal = 20)
 {
-    net_p <- centrality1 (net, wt_profile = "foot")
-    net_v <- centrality1 (net, wt_profile = "motorcar")
+    if ("centrality" %in% names (net_p) &&
+        !"centrality" %in% names (net_v))
+        stop ("parameters are 'net_p' then 'net_v'")
+
     disperse_emissions (net_p, net_v, dispersal = dispersal)
 }
 
-centrality1 <- function (net, wt_profile = "foot")
+#' exposure_centrality
+#'
+#' Calculate centrality for a street network
+#'
+#' @param net A \pkg{dodgr} network weighted for vehicular transport (that is,
+#' with `wt_profile = "motorcar"`).
+#' @return Modified version of same net with additional "centrality" column
+#' appended.
+#' @export
+exposure_centrality <- function (net)
 {
     message (cli::col_blue (cli::symbol$pointer),
-             cli::col_green ("  Preparing streetnet for ",
-                             wt_profile, " weighting"), appendLF = FALSE)
+             cli::col_green ("  Preparing network "), appendLF = FALSE)
 
     dodgr::dodgr_cache_off ()
-    net <- dodgr::weight_streetnet (net, wt_profile = wt_profile)
     net$d <- net$time
     net$d_weighted <- net$time_weighted
     net_c <- dodgr::dodgr_contract_graph (net)
@@ -40,18 +50,17 @@ centrality1 <- function (net, wt_profile = "foot")
     graph <- convert_graph (net_c, gr_cols)
 
     message ("\r", cli::col_green (cli::symbol$tick,
-             "  Prepared streetnet for ", wt_profile, " weighting "))
+             "  Prepared network "))
     message (cli::col_blue (cli::symbol$pointer),
              cli::col_green ("  Calculating centrality"), appendLF = FALSE)
 
     # final '0' is for sampling calculation to estimate speed - non-zero values
     # used only in 'estimate_centrality_time'
-    centrality <- rcpp_centrality (graph, vert_map, dist_threshold, edges, 0)
+    net_c$centrality <- rcpp_centrality (graph, vert_map, dist_threshold, edges, 0)
 
     message ("\r", cli::col_green (cli::symbol$tick,
              "  Calculated centrality "))
 
-    net_c$centrality <- centrality
     dodgr::dodgr_uncontract_graph (net_c)
 }
 
@@ -104,15 +113,7 @@ disperse_emissions <- function (net_p, net_v, dispersal = 20)
     indxf <- match (net_p$.vx0, v$id)
     indxt <- match (net_p$.vx1, v$id)
     fmax <- apply (cbind (v$centrality [indxf], v$centrality [indxt]), 1, max)
-    fsum <- sum (net_v$centrality)
-    fmax <- fmax * fsum / sum (net_p$centrality)
-    indx <- which (fmax > net_p$centrality)
-    # That again imbalances the centrality of the graph, so needs to be standardised
-    # back to original sum again
-    fsum <- sum (net_p$centrality)
-    net_p$exposure <- 0
-    net_p$exposure [indx] <- fmax [indx]
-    net_p$exposure <- net_p$exposure * fsum / sum (net_p$exposure)
+    net_p$exposure <- fmax
 
     message ("\r", cli::col_green (cli::symbol$tick,
              "  Dispersed emissions between networks "))

@@ -6,9 +6,13 @@ test_all <- (identical (Sys.getenv ("MPADGE_LOCAL"), "true") |
 source ("../sc-conversion-fns.R")
 
 test_that("exposure", {
-              h <- sf_to_sc (dodgr::hampi)
-              net <- exposure_centrality (h)
-              expect_is (net, "dodgr_streetnet_sc")
-              expect_true ("centrality" %in% names (net))
-              expect_true ("exposure" %in% names (net))
+              net <- sf_to_sc (dodgr::hampi)
+              net_v <- dodgr::weight_streetnet (net, wt_profile = "motorcar")
+              net_v <- exposure_centrality (net_v)
+              expect_is (net_v, "dodgr_streetnet_sc")
+              expect_true ("centrality" %in% names (net_v))
+              net_p <- dodgr::weight_streetnet (net, wt_profile = "foot")
+              net_p <- exposure (net_p, net_v)
+              expect_is (net_p, "dodgr_streetnet_sc")
+              expect_true ("exposure" %in% names (net_p))
 })

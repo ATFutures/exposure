@@ -3,6 +3,7 @@
 export("%>%")
 export(exposure)
 export(exposure_centrality)
+export(exposure_disperse)
 importFrom(Rcpp,evalCpp)
 importFrom(RcppParallel,RcppParallelLibs)
 importFrom(magrittr,"%>%")
