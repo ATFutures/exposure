@@ -72,6 +72,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_flows_exposure
+Rcpp::NumericVector rcpp_flows_exposure(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, Rcpp::IntegerVector fromi, const double k, Rcpp::NumericVector dens, const double& tol);
+RcppExport SEXP _exposure_rcpp_flows_exposure(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP fromiSEXP, SEXP kSEXP, SEXP densSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fromi(fromiSEXP);
+    Rcpp::traits::input_parameter< const double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dens(densSEXP);
+    Rcpp::traits::input_parameter< const double& >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_flows_exposure(graph, vert_map_in, fromi, k, dens, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_points_index_par
 Rcpp::IntegerVector rcpp_points_index_par(const Rcpp::DataFrame& xy, Rcpp::DataFrame& pts);
 RcppExport SEXP _exposure_rcpp_points_index_par(SEXP xySEXP, SEXP ptsSEXP) {
@@ -90,6 +106,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_exposure_rcpp_flows_aggregate_par", (DL_FUNC) &_exposure_rcpp_flows_aggregate_par, 7},
     {"_exposure_rcpp_flows_disperse_par", (DL_FUNC) &_exposure_rcpp_flows_disperse_par, 6},
     {"_exposure_rcpp_flows_si", (DL_FUNC) &_exposure_rcpp_flows_si, 9},
+    {"_exposure_rcpp_flows_exposure", (DL_FUNC) &_exposure_rcpp_flows_exposure, 6},
     {"_exposure_rcpp_points_index_par", (DL_FUNC) &_exposure_rcpp_points_index_par, 2},
     {NULL, NULL, 0}
 };

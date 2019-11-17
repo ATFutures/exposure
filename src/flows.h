@@ -45,3 +45,11 @@ Rcpp::NumericVector rcpp_flows_si (const Rcpp::DataFrame graph,
         Rcpp::NumericVector dens_to,
         const bool norm_sums,
         const double tol);
+
+Rcpp::NumericVector rcpp_flows_exposure (const Rcpp::DataFrame graph,
+        const Rcpp::DataFrame vert_map_in,
+        Rcpp::IntegerVector fromi,
+        Rcpp::NumericVector k,
+        Rcpp::NumericVector dens,
+        const double &tol);
+
