@@ -1,0 +1,35 @@
+Package: exposure
+Title: Spatial relative risk from exposure to urban pollutants
+Version: 0.0.0.001
+Authors@R: c(
+    person("Mark", "Padgham", email="mark.padgham@email.com", role=c("aut", "cre")),
+    person("Shane", "Saunders", role="cph",
+        comment="Original author of included code for priority heaps"))
+Description: Spatial relative risk from exposure to urban pollutants.
+Depends: R (>= 3.5.0)
+License: GPL-3
+Imports:
+    dodgr,
+    magrittr,
+    methods,
+    Rcpp (>= 0.12.6),
+    RcppParallel
+Suggests:
+    knitr,
+    rmarkdown,
+    roxygen2,
+    testthat
+LinkingTo:
+    Rcpp,
+    RcppParallel
+SystemRequirements:
+    C++11,
+    GNU make
+VignetteBuilder: knitr
+NeedsCompilation: yes
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/ATFutures/exposure
+BugReports: https://github.com/ATFutures/exposure/issues
+RoxygenNote: 7.0.0
+Roxygen: list(markdown = TRUE)

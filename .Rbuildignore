@@ -1,0 +1,14 @@
+^aaa*
+^README\.Rmd$
+^README\.html$
+^README-.*\.png$
+^\.travis\.yml$
+^makefile$
+^vignettes/makefile$
+docs/
+data-raw/
+^_pkgdown\.yml$
+^appveyor\.yml$
+^.*\.Rproj$
+^\.Rproj\.user$
+^codemeta\.json$
