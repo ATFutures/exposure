@@ -2,15 +2,6 @@ language: R
 cache: packages
 sudo: required
 
-addons:
-    apt:
-        packages:
-            - libudunits2-dev
-            - libproj-dev
-            - libgeos-dev
-            - libgdal-dev
-
-
 matrix:
     include:
         - r: release
@@ -21,17 +12,8 @@ matrix:
             #provider: script
             #script: Rscript -e 'pkgdown::deploy_site_github(verbose = TRUE)'
             #skip_cleanup: true
-        - r: devel
-        - r: oldrel
-        - os: osx
-          r: release
-        - os: osx
-          r: devel
-    allow_failures:
-        - os: osx
-          r: release
-        - os: osx
-          r: devel
+            #- r: devel
+            #- r: oldrel
 
 notifications:
   email:
