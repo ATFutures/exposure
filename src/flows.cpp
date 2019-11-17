@@ -32,7 +32,6 @@ struct OneAggregate : public RcppParallel::Worker
     size_t nedges;
     const bool norm_sums;
     const double tol;
-    const std::string heap_type;
     std::shared_ptr <DGraph> g;
 
     std::vector <double> output;
@@ -48,13 +47,12 @@ struct OneAggregate : public RcppParallel::Worker
             const size_t nedges_in,
             const bool norm_sums_in,
             const double tol_in,
-            const std::string &heap_type_in,
             const std::shared_ptr <DGraph> g_in) :
         dp_fromi (fromi), toi (toi_in), flows (flows_in),
         vert_name (vert_name_in),
         verts_to_edge_map (verts_to_edge_map_in),
         nverts (nverts_in), nedges (nedges_in), norm_sums (norm_sums_in),
-        tol (tol_in), heap_type (heap_type_in), g (g_in), output ()
+        tol (tol_in), g (g_in), output ()
     {
         output.resize (nedges, 0.0);
     }
@@ -68,7 +66,7 @@ struct OneAggregate : public RcppParallel::Worker
         verts_to_edge_map (oneAggregate.verts_to_edge_map),
         nverts (oneAggregate.nverts), nedges (oneAggregate.nedges),
         norm_sums (oneAggregate.norm_sums), tol (oneAggregate.tol),
-        heap_type (oneAggregate.heap_type), g (oneAggregate.g), output ()
+        g (oneAggregate.g), output ()
     {
         output.resize (nedges, 0.0);
     }
@@ -184,7 +182,6 @@ struct OneDisperse : public RcppParallel::Worker
     size_t nedges;
     const Rcpp::NumericVector kfrom;
     const double tol;
-    const std::string heap_type;
     std::shared_ptr <DGraph> g;
 
     std::vector <double> output;
@@ -199,12 +196,11 @@ struct OneDisperse : public RcppParallel::Worker
             const size_t nedges_in,
             const Rcpp::NumericVector kfrom_in,
             const double tol_in,
-            const std::string &heap_type_in,
             const std::shared_ptr <DGraph> g_in) :
         dp_fromi (fromi), dens (dens_in), vert_name (vert_name_in),
         verts_to_edge_map (verts_to_edge_map_in),
         nverts (nverts_in), nedges (nedges_in), kfrom (kfrom_in),
-        tol (tol_in), heap_type (heap_type_in), g (g_in), output ()
+        tol (tol_in), g (g_in), output ()
     {
         const R_xlen_t nfrom = dens.size ();
         const R_xlen_t nk = kfrom.size () / nfrom;
@@ -221,7 +217,7 @@ struct OneDisperse : public RcppParallel::Worker
         verts_to_edge_map (oneDisperse.verts_to_edge_map),
         nverts (oneDisperse.nverts), nedges (oneDisperse.nedges),
         kfrom (oneDisperse.kfrom), tol (oneDisperse.tol),
-        heap_type (oneDisperse.heap_type), g (oneDisperse.g), output ()
+        g (oneDisperse.g), output ()
     {
         const R_xlen_t nfrom = dens.size ();
         const R_xlen_t nk = kfrom.size () / nfrom;
@@ -329,7 +325,6 @@ struct OneSI : public RcppParallel::Worker
     size_t nedges;
     const bool norm_sums;
     const double tol;
-    const std::string heap_type;
     std::shared_ptr <DGraph> g;
 
     std::vector <double> output;
@@ -347,13 +342,12 @@ struct OneSI : public RcppParallel::Worker
             const size_t nedges_in,
             const bool norm_sums_in,
             const double tol_in,
-            const std::string &heap_type_in,
             const std::shared_ptr <DGraph> g_in) :
         dp_fromi (fromi), toi (toi_in), k_from (k_from_in),
         dens_from (dens_from_in), dens_to (dens_to_in),
         vert_name (vert_name_in), verts_to_edge_map (verts_to_edge_map_in),
         nverts (nverts_in), nedges (nedges_in), norm_sums (norm_sums_in),
-        tol (tol_in), heap_type (heap_type_in), g (g_in), output ()
+        tol (tol_in), g (g_in), output ()
     {
         const R_xlen_t nfrom = dens_from.size ();
         const R_xlen_t nk = k_from.size () / nfrom;
@@ -370,7 +364,7 @@ struct OneSI : public RcppParallel::Worker
         vert_name (oneSI.vert_name), verts_to_edge_map (oneSI.verts_to_edge_map),
         nverts (oneSI.nverts), nedges (oneSI.nedges),
         norm_sums (oneSI.norm_sums), tol (oneSI.tol),
-        heap_type (oneSI.heap_type), g (oneSI.g), output ()
+        g (oneSI.g), output ()
     {
         const R_xlen_t nfrom = dens_from.size ();
         const R_xlen_t nk = k_from.size () / nfrom;
@@ -559,8 +553,7 @@ Rcpp::NumericVector rcpp_flows_aggregate_par (const Rcpp::DataFrame graph,
         Rcpp::IntegerVector toi_in,
         Rcpp::NumericMatrix flows,
         const bool norm_sums,
-        const double tol,
-        const std::string heap_type)
+        const double tol)
 {
     std::vector <unsigned int> toi =
         Rcpp::as <std::vector <unsigned int> > ( toi_in);
@@ -589,7 +582,7 @@ Rcpp::NumericVector rcpp_flows_aggregate_par (const Rcpp::DataFrame graph,
 
     // Create parallel worker
     OneAggregate oneAggregate (fromi, toi, flows, vert_name, verts_to_edge_map,
-            nverts, nedges, norm_sums, tol, heap_type, g);
+            nverts, nedges, norm_sums, tol, g);
 
     size_t chunk_size = get_chunk_size (nfrom);
     RcppParallel::parallelReduce (0, nfrom, oneAggregate, chunk_size);
@@ -623,8 +616,7 @@ Rcpp::NumericVector rcpp_flows_disperse_par (const Rcpp::DataFrame graph,
         Rcpp::IntegerVector fromi,
         Rcpp::NumericVector k,
         Rcpp::NumericVector dens,
-        const double &tol,
-        std::string heap_type)
+        const double &tol)
 {
     Rcpp::NumericVector id_vec;
     const size_t nfrom = static_cast <size_t> (fromi.size ());
@@ -651,7 +643,7 @@ Rcpp::NumericVector rcpp_flows_disperse_par (const Rcpp::DataFrame graph,
 
     // Create parallel worker
     OneDisperse oneDisperse (fromi, dens, vert_name, verts_to_edge_map,
-            nverts, nedges, k, tol, heap_type, g);
+            nverts, nedges, k, tol, g);
 
     size_t chunk_size = get_chunk_size (nfrom);
     RcppParallel::parallelReduce (0, nfrom, oneDisperse, chunk_size);
@@ -682,8 +674,7 @@ Rcpp::NumericVector rcpp_flows_si (const Rcpp::DataFrame graph,
         Rcpp::NumericVector dens_from,
         Rcpp::NumericVector dens_to,
         const bool norm_sums,
-        const double tol,
-        const std::string heap_type)
+        const double tol)
 {
     std::vector <unsigned int> toi =
         Rcpp::as <std::vector <unsigned int> > ( toi_in);
@@ -713,7 +704,7 @@ Rcpp::NumericVector rcpp_flows_si (const Rcpp::DataFrame graph,
     // Create parallel worker
     OneSI oneSI (fromi, toi, kvec, dens_from, dens_to,
             vert_name, verts_to_edge_map,
-            nverts, nedges, norm_sums, tol, heap_type, g);
+            nverts, nedges, norm_sums, tol, g);
 
     size_t chunk_size = get_chunk_size (nfrom);
     RcppParallel::parallelReduce (0, nfrom, oneSI, chunk_size);

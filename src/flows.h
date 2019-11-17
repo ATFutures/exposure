@@ -27,16 +27,14 @@ Rcpp::NumericVector rcpp_flows_aggregate_par (const Rcpp::DataFrame graph,
         Rcpp::IntegerVector toi_in,
         Rcpp::NumericMatrix flows,
         const bool norm_sums,
-        const double tol,
-        const std::string heap_type);
+        const double tol);
 
 Rcpp::NumericVector rcpp_flows_disperse_par (const Rcpp::DataFrame graph,
         const Rcpp::DataFrame vert_map_in,
         Rcpp::IntegerVector fromi,
         Rcpp::NumericVector k,
         Rcpp::NumericVector flows,
-        const double &tol,
-        std::string heap_type);
+        const double &tol);
 
 Rcpp::NumericVector rcpp_flows_si (const Rcpp::DataFrame graph,
         const Rcpp::DataFrame vert_map_in,
@@ -46,5 +44,4 @@ Rcpp::NumericVector rcpp_flows_si (const Rcpp::DataFrame graph,
         Rcpp::NumericVector dens_from,
         Rcpp::NumericVector dens_to,
         const bool norm_sums,
-        const double tol,
-        const std::string heap_type);
+        const double tol);

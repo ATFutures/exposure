@@ -28,8 +28,8 @@ rcpp_centrality <- function(graph, vert_map_in, dist_threshold, edge_centrality,
 #' characters long, that chance should be 1 / 62 ^ 10.
 #'
 #' @noRd
-rcpp_flows_aggregate_par <- function(graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol, heap_type) {
-    .Call(`_exposure_rcpp_flows_aggregate_par`, graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol, heap_type)
+rcpp_flows_aggregate_par <- function(graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol) {
+    .Call(`_exposure_rcpp_flows_aggregate_par`, graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol)
 }
 
 #' rcpp_flows_disperse_par
@@ -50,8 +50,8 @@ rcpp_flows_aggregate_par <- function(graph, vert_map_in, fromi, toi_in, flows, n
 #' betwen each pair of from and to points.
 #'
 #' @noRd
-rcpp_flows_disperse_par <- function(graph, vert_map_in, fromi, k, dens, tol, heap_type) {
-    .Call(`_exposure_rcpp_flows_disperse_par`, graph, vert_map_in, fromi, k, dens, tol, heap_type)
+rcpp_flows_disperse_par <- function(graph, vert_map_in, fromi, k, dens, tol) {
+    .Call(`_exposure_rcpp_flows_disperse_par`, graph, vert_map_in, fromi, k, dens, tol)
 }
 
 #' rcpp_flows_si
@@ -67,8 +67,8 @@ rcpp_flows_disperse_par <- function(graph, vert_map_in, fromi, k, dens, tol, hea
 #' (to-vertices) are not considered.
 #'
 #' @noRd
-rcpp_flows_si <- function(graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol, heap_type) {
-    .Call(`_exposure_rcpp_flows_si`, graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol, heap_type)
+rcpp_flows_si <- function(graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol) {
+    .Call(`_exposure_rcpp_flows_si`, graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol)
 }
 
 #' rcpp_points_index_par

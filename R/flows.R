@@ -25,14 +25,13 @@ exposure_disperse <- function (graph, from, dens, k = 500, tol = 1e-12)
     }
     k <- k [1]
 
-    heap <- "BHeap"
     g <- prepare_graph (graph, from)
 
     if (!is.matrix (dens))
         dens <- as.matrix (dens)
 
     f <- rcpp_flows_disperse_par (g$graph, g$vert_map, g$from_index,
-                                  k, dens, tol, heap)
+                                  k, dens, tol)
     graph$exposure <- f
 
     return (graph)
