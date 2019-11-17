@@ -9,11 +9,14 @@ Description: Spatial relative risk from exposure to urban pollutants.
 Depends: R (>= 3.5.0)
 License: GPL-3
 Imports:
+    cli,
     dodgr,
+    geodist,
     magrittr,
     methods,
     Rcpp (>= 0.12.6),
-    RcppParallel
+    RcppParallel,
+    spatstat
 Suggests:
     knitr,
     rmarkdown,
