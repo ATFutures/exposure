@@ -18,7 +18,6 @@ exposure_centrality <- function (graph, pedestrian = TRUE)
 
     dist_threshold <- .Machine$double.xmax
     edges <- TRUE # hard-coded for edge-based centrality
-    heap <- "BHeap"
 
     gr_cols <- dodgr_graph_cols (graph)
     vert_map <- make_vert_map (graph, gr_cols)
@@ -26,7 +25,7 @@ exposure_centrality <- function (graph, pedestrian = TRUE)
 
     # final '0' is for sampling calculation to estimate speed - non-zero values
     # used only in 'estimate_centrality_time'
-    centrality <- rcpp_centrality (graph2, vert_map, heap, dist_threshold, edges, 0)
+    centrality <- rcpp_centrality (graph2, vert_map, dist_threshold, edges, 0)
 
     graph$centrality <- centrality
 

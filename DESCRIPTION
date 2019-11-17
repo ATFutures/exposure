@@ -22,6 +22,8 @@ Suggests:
 LinkingTo:
     Rcpp,
     RcppParallel
+Remotes:
+    ATFutures/dodgr
 SystemRequirements:
     C++11,
     GNU make

@@ -6,18 +6,17 @@
 using namespace Rcpp;
 
 // rcpp_centrality
-Rcpp::NumericVector rcpp_centrality(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, const std::string& heap_type, const double dist_threshold, const bool edge_centrality, const int sample);
-RcppExport SEXP _exposure_rcpp_centrality(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP heap_typeSEXP, SEXP dist_thresholdSEXP, SEXP edge_centralitySEXP, SEXP sampleSEXP) {
+Rcpp::NumericVector rcpp_centrality(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, const double dist_threshold, const bool edge_centrality, const int sample);
+RcppExport SEXP _exposure_rcpp_centrality(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP dist_thresholdSEXP, SEXP edge_centralitySEXP, SEXP sampleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
     Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type heap_type(heap_typeSEXP);
     Rcpp::traits::input_parameter< const double >::type dist_threshold(dist_thresholdSEXP);
     Rcpp::traits::input_parameter< const bool >::type edge_centrality(edge_centralitySEXP);
     Rcpp::traits::input_parameter< const int >::type sample(sampleSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_centrality(graph, vert_map_in, heap_type, dist_threshold, edge_centrality, sample));
+    rcpp_result_gen = Rcpp::wrap(rcpp_centrality(graph, vert_map_in, dist_threshold, edge_centrality, sample));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -88,78 +87,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_get_sp_dists_par
-Rcpp::NumericMatrix rcpp_get_sp_dists_par(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, Rcpp::IntegerVector fromi, Rcpp::IntegerVector toi_in, const std::string& heap_type, const bool is_spatial);
-RcppExport SEXP _exposure_rcpp_get_sp_dists_par(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP fromiSEXP, SEXP toi_inSEXP, SEXP heap_typeSEXP, SEXP is_spatialSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fromi(fromiSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type toi_in(toi_inSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type heap_type(heap_typeSEXP);
-    Rcpp::traits::input_parameter< const bool >::type is_spatial(is_spatialSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_sp_dists_par(graph, vert_map_in, fromi, toi_in, heap_type, is_spatial));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_get_iso
-Rcpp::NumericMatrix rcpp_get_iso(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, Rcpp::IntegerVector fromi, Rcpp::NumericVector dlim, const std::string& heap_type);
-RcppExport SEXP _exposure_rcpp_get_iso(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP fromiSEXP, SEXP dlimSEXP, SEXP heap_typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fromi(fromiSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dlim(dlimSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type heap_type(heap_typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_iso(graph, vert_map_in, fromi, dlim, heap_type));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_get_sp_dists
-Rcpp::NumericMatrix rcpp_get_sp_dists(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, Rcpp::IntegerVector fromi, Rcpp::IntegerVector toi_in, const std::string& heap_type);
-RcppExport SEXP _exposure_rcpp_get_sp_dists(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP fromiSEXP, SEXP toi_inSEXP, SEXP heap_typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fromi(fromiSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type toi_in(toi_inSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type heap_type(heap_typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_sp_dists(graph, vert_map_in, fromi, toi_in, heap_type));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_get_paths
-Rcpp::List rcpp_get_paths(const Rcpp::DataFrame graph, const Rcpp::DataFrame vert_map_in, Rcpp::IntegerVector fromi, Rcpp::IntegerVector toi_in, const std::string& heap_type);
-RcppExport SEXP _exposure_rcpp_get_paths(SEXP graphSEXP, SEXP vert_map_inSEXP, SEXP fromiSEXP, SEXP toi_inSEXP, SEXP heap_typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type graph(graphSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame >::type vert_map_in(vert_map_inSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fromi(fromiSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type toi_in(toi_inSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type heap_type(heap_typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_paths(graph, vert_map_in, fromi, toi_in, heap_type));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_exposure_rcpp_centrality", (DL_FUNC) &_exposure_rcpp_centrality, 6},
+    {"_exposure_rcpp_centrality", (DL_FUNC) &_exposure_rcpp_centrality, 5},
     {"_exposure_rcpp_flows_aggregate_par", (DL_FUNC) &_exposure_rcpp_flows_aggregate_par, 8},
     {"_exposure_rcpp_flows_disperse_par", (DL_FUNC) &_exposure_rcpp_flows_disperse_par, 7},
     {"_exposure_rcpp_flows_si", (DL_FUNC) &_exposure_rcpp_flows_si, 10},
     {"_exposure_rcpp_points_index_par", (DL_FUNC) &_exposure_rcpp_points_index_par, 2},
-    {"_exposure_rcpp_get_sp_dists_par", (DL_FUNC) &_exposure_rcpp_get_sp_dists_par, 6},
-    {"_exposure_rcpp_get_iso", (DL_FUNC) &_exposure_rcpp_get_iso, 5},
-    {"_exposure_rcpp_get_sp_dists", (DL_FUNC) &_exposure_rcpp_get_sp_dists, 5},
-    {"_exposure_rcpp_get_paths", (DL_FUNC) &_exposure_rcpp_get_paths, 5},
     {NULL, NULL, 0}
 };
 

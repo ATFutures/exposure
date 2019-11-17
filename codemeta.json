@@ -1,5 +1,8 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "exposure",
   "description": "Spatial relative risk from exposure to urban pollutants.",
@@ -107,7 +110,7 @@
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=dodgr"
+      "sameAs": "https://github.com/ATFutures/dodgr"
     },
     {
       "@type": "SoftwareApplication",
@@ -160,7 +163,12 @@
       "identifier": "https://sysreqs.r-hub.io/get/cxx11"
     }
   ],
-  "fileSize": "28.805KB",
-  "contIntegration": ["https://travis-ci.org/ATFutures/exposure", "https://ci.appveyor.com/project/ATFutures/exposure", "https://codecov.io/gh/ATFutures/exposure"],
-  "developmentStatus": "http://www.repostatus.org/#concept"
+  "fileSize": "25.887KB",
+  "contIntegration": [
+    "https://travis-ci.org/ATFutures/exposure",
+    "https://ci.appveyor.com/project/ATFutures/exposure",
+    "https://codecov.io/gh/ATFutures/exposure"
+  ],
+  "developmentStatus": "http://www.repostatus.org/#concept",
+  "readme": "https://github.com/ATFutures/exposure/blob/master/README.md"
 }

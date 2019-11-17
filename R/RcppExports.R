@@ -6,8 +6,8 @@
 #' sample is used to estimate timing, by calculating centrality from just a few
 #' vertices.
 #' @noRd
-rcpp_centrality <- function(graph, vert_map_in, heap_type, dist_threshold, edge_centrality, sample) {
-    .Call(`_exposure_rcpp_centrality`, graph, vert_map_in, heap_type, dist_threshold, edge_centrality, sample)
+rcpp_centrality <- function(graph, vert_map_in, dist_threshold, edge_centrality, sample) {
+    .Call(`_exposure_rcpp_centrality`, graph, vert_map_in, dist_threshold, edge_centrality, sample)
 }
 
 #' rcpp_flows_aggregate_par
@@ -83,48 +83,5 @@ rcpp_flows_si <- function(graph, vert_map_in, fromi, toi_in, kvec, dens_from, de
 #' @noRd
 rcpp_points_index_par <- function(xy, pts) {
     .Call(`_exposure_rcpp_points_index_par`, xy, pts)
-}
-
-#' rcpp_get_sp_dists_par
-#'
-#' @noRd
-rcpp_get_sp_dists_par <- function(graph, vert_map_in, fromi, toi_in, heap_type, is_spatial) {
-    .Call(`_exposure_rcpp_get_sp_dists_par`, graph, vert_map_in, fromi, toi_in, heap_type, is_spatial)
-}
-
-#' rcpp_get_iso
-#'
-#' @noRd
-rcpp_get_iso <- function(graph, vert_map_in, fromi, dlim, heap_type) {
-    .Call(`_exposure_rcpp_get_iso`, graph, vert_map_in, fromi, dlim, heap_type)
-}
-
-#' rcpp_get_sp_dists
-#'
-#' @noRd
-rcpp_get_sp_dists <- function(graph, vert_map_in, fromi, toi_in, heap_type) {
-    .Call(`_exposure_rcpp_get_sp_dists`, graph, vert_map_in, fromi, toi_in, heap_type)
-}
-
-#' rcpp_get_paths
-#'
-#' @param graph The data.frame holding the graph edges
-#' @param vert_map_in map from <std::string> vertex ID to (0-indexed) integer
-#' index of vertices
-#' @param fromi Index into vert_map_in of vertex numbers
-#' @param toi Index into vert_map_in of vertex numbers
-#'
-#' @note The graph is constructed with 0-indexed vertex numbers contained in
-#' code{vert_map_in}. Both \code{fromi} and \code{toi} already map directly
-#' onto these. The graph has to be constructed by first constructing a
-#' \code{std::map} object (\code{vertmap}) for \code{vert_map_in}, then
-#' translating all \code{graph["from"/"to"]} values into these indices. This
-#' construction is done in \code{inst_graph}.
-#'
-#' @note Returns 1-indexed values indexing directly into the R input
-#'
-#' @noRd
-rcpp_get_paths <- function(graph, vert_map_in, fromi, toi_in, heap_type) {
-    .Call(`_exposure_rcpp_get_paths`, graph, vert_map_in, fromi, toi_in, heap_type)
 }
 

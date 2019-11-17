@@ -36,7 +36,6 @@ void inst_graph (std::shared_ptr<DGraph> g, unsigned int nedges,
 struct OneCentralityVert : public RcppParallel::Worker
 {
     size_t nverts; // can't be const because of reinterpret case
-    const std::string heap_type;
     const double dist_threshold;
     std::shared_ptr <DGraph> g;
 
@@ -45,10 +44,9 @@ struct OneCentralityVert : public RcppParallel::Worker
     // Constructor 1: The main constructor
     OneCentralityVert (
             const size_t nverts_in,
-            const std::string heap_type_in,
             const double dist_threshold_in,
             const std::shared_ptr <DGraph> g_in) :
-        nverts (nverts_in), heap_type (heap_type_in), 
+        nverts (nverts_in),
         dist_threshold (dist_threshold_in), g (g_in), output ()
     {
         output.resize (nverts, 0.0);
@@ -59,7 +57,6 @@ struct OneCentralityVert : public RcppParallel::Worker
             const OneCentralityVert &oneCentralityVert,
             RcppParallel::Split) :
         nverts (oneCentralityVert.nverts),
-        heap_type (oneCentralityVert.heap_type), 
         dist_threshold (oneCentralityVert.dist_threshold),
         g (oneCentralityVert.g), output ()
     {
@@ -72,14 +69,12 @@ struct OneCentralityVert : public RcppParallel::Worker
     {
         std::shared_ptr<PF::PathFinder> pathfinder =
             std::make_shared <PF::PathFinder> (nverts,
-                    *run_sp::getHeapImpl (heap_type), g);
+                    *run_sp::getHeapImpl (), g);
 
         std::vector <double> cent (nverts, 0.0);
 
         for (size_t v = begin; v < end; v++)
         {
-            if (RcppThread::isInterrupted (v % static_cast<int>(100) == 0))
-                return;
             pathfinder->Centrality_vertex (cent, v, dist_threshold);
         }
 
@@ -98,7 +93,6 @@ struct OneCentralityEdge : public RcppParallel::Worker
 {
     size_t nverts; // can't be const because of reinterpret case
     size_t nedges;
-    const std::string heap_type;
     const double dist_threshold;
     std::shared_ptr <DGraph> g;
 
@@ -108,11 +102,10 @@ struct OneCentralityEdge : public RcppParallel::Worker
     OneCentralityEdge (
             const size_t nverts_in,
             const size_t nedges_in,
-            const std::string heap_type_in,
             const double dist_threshold_in,
             const std::shared_ptr <DGraph> g_in) :
         nverts (nverts_in), nedges (nedges_in), 
-        heap_type (heap_type_in), dist_threshold (dist_threshold_in), g (g_in),
+        dist_threshold (dist_threshold_in), g (g_in),
         output ()
     {
         output.resize (nedges, 0.0);
@@ -124,7 +117,6 @@ struct OneCentralityEdge : public RcppParallel::Worker
             RcppParallel::Split) :
         nverts (oneCentralityEdge.nverts),
         nedges (oneCentralityEdge.nedges), 
-        heap_type (oneCentralityEdge.heap_type),
         dist_threshold (oneCentralityEdge.dist_threshold),
         g (oneCentralityEdge.g),
         output ()
@@ -137,14 +129,12 @@ struct OneCentralityEdge : public RcppParallel::Worker
     {
         std::shared_ptr<PF::PathFinder> pathfinder =
             std::make_shared <PF::PathFinder> (nverts,
-                    *run_sp::getHeapImpl (heap_type), g);
+                    *run_sp::getHeapImpl (), g);
 
         std::vector <double> cent (nedges, 0.0);
 
         for (size_t v = begin; v < end; v++)
         {
-            if (RcppThread::isInterrupted (v % static_cast<int>(100) == 0))
-                return;
             pathfinder->Centrality_edge (cent, v, nedges, dist_threshold);
         }
         for (size_t i = 0; i < nedges; i++)
@@ -358,7 +348,6 @@ void PF::PathFinder::Centrality_edge (
 // [[Rcpp::export]]
 Rcpp::NumericVector rcpp_centrality (const Rcpp::DataFrame graph,
         const Rcpp::DataFrame vert_map_in,
-        const std::string& heap_type,
         const double dist_threshold,
         const bool edge_centrality,
         const int sample)
@@ -385,14 +374,13 @@ Rcpp::NumericVector rcpp_centrality (const Rcpp::DataFrame graph,
     std::vector <double> result;
     if (edge_centrality)
     {
-        OneCentralityEdge one_centrality (nverts, nedges, heap_type,
-                dist_threshold, g);
+        OneCentralityEdge one_centrality (nverts, nedges, dist_threshold, g);
 
         RcppParallel::parallelReduce (0, nverts_to_use, one_centrality);
         result = one_centrality.output;
     } else // vertex centrality
     {
-        OneCentralityVert one_centrality (nverts, heap_type, dist_threshold, g);
+        OneCentralityVert one_centrality (nverts, dist_threshold, g);
 
         RcppParallel::parallelReduce (0, nverts_to_use, one_centrality);
         result = one_centrality.output;

@@ -78,17 +78,13 @@ struct OneAggregate : public RcppParallel::Worker
     {
         std::shared_ptr<PF::PathFinder> pathfinder =
             std::make_shared <PF::PathFinder> (nverts,
-                    *run_sp::getHeapImpl (heap_type), g);
+                    *run_sp::getHeapImpl (), g);
         std::vector <double> w (nverts);
         std::vector <double> d (nverts);
         std::vector <int> prev (nverts);
 
         for (size_t i = begin; i < end; i++)
         {
-            //if (RcppThread::isInterrupted (i % static_cast<int>(100) == 0))
-            if (RcppThread::isInterrupted ())
-                return;
-
             // These have to be reserved within the parallel operator function!
             std::fill (w.begin (), w.end (), INFINITE_DOUBLE);
             std::fill (d.begin (), d.end (), INFINITE_DOUBLE);
@@ -239,7 +235,7 @@ struct OneDisperse : public RcppParallel::Worker
     {
         std::shared_ptr<PF::PathFinder> pathfinder =
             std::make_shared <PF::PathFinder> (nverts,
-                    *run_sp::getHeapImpl (heap_type), g);
+                    *run_sp::getHeapImpl (), g);
         std::vector <double> w (nverts);
         std::vector <double> d (nverts);
         std::vector <int> prev (nverts);
@@ -250,10 +246,6 @@ struct OneDisperse : public RcppParallel::Worker
 
         for (size_t i = begin; i < end; i++) // over the from vertices
         {
-            //if (RcppThread::isInterrupted (i % static_cast<int>(10) == 0))
-            if (RcppThread::isInterrupted ())
-                return;
-
             R_xlen_t ir = static_cast <R_xlen_t> (i);
             // translate k-value to distance limit based on tol
             // exp(-d / k) = tol -> d = -k * log (tol)
@@ -391,7 +383,7 @@ struct OneSI : public RcppParallel::Worker
     {
         std::shared_ptr<PF::PathFinder> pathfinder =
             std::make_shared <PF::PathFinder> (nverts,
-                    *run_sp::getHeapImpl (heap_type), g);
+                    *run_sp::getHeapImpl (), g);
         std::vector <double> w (nverts);
         std::vector <double> d (nverts);
         std::vector <int> prev (nverts);
@@ -405,10 +397,6 @@ struct OneSI : public RcppParallel::Worker
 
         for (size_t i = begin; i < end; i++)
         {
-            //if (RcppThread::isInterrupted (i % static_cast<int>(100) == 0))
-            if (RcppThread::isInterrupted ())
-                return;
-
             R_xlen_t i_R = static_cast <R_xlen_t> (i);
 
             // These have to be reserved within the parallel operator function!
