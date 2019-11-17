@@ -18,6 +18,7 @@ Imports:
     RcppParallel,
     spatstat
 Suggests:
+    dplyr,
     knitr,
     rmarkdown,
     roxygen2,

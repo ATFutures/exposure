@@ -46,6 +46,18 @@
   "softwareSuggestions": [
     {
       "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "knitr",
       "name": "knitr",
       "provider": {
@@ -199,7 +211,7 @@
       "identifier": "https://sysreqs.r-hub.io/get/cxx11"
     }
   ],
-  "fileSize": "1003.821KB",
+  "fileSize": "1004.298KB",
   "contIntegration": [
     "https://travis-ci.org/ATFutures/exposure",
     "https://ci.appveyor.com/project/ATFutures/exposure",
