@@ -570,7 +570,6 @@ struct OneExposure : public RcppParallel::Worker
 
         for (size_t i = begin; i < end; i++) // over the from vertices
         {
-            R_xlen_t ir = static_cast <R_xlen_t> (i);
             // translate k-value to distance limit based on tol
             // exp(-d / k) = tol -> d = -k * log (tol)
             double dlim = -k * log (tol);
@@ -584,28 +583,33 @@ struct OneExposure : public RcppParallel::Worker
 
             pathfinder->DijkstraLimit (d, w, prev, from_i, dlim);
 
-            std::vector <double> flows_i (nverts, 0.0);
-            double expsum = 0.0;
-
-            for (size_t j = 0; j < nverts; j++)
+            // get sums tracing back from terminal vertices
+            std::vector <bool> has_prev (nverts, false);
+            std::unordered_set <int> prev_set;
+            for (unsigned int j = 0; j < nverts; j++)
             {
-                if (prev [j] > 0 && prev [j] < INFINITE_INT)
+                if (w [j] < dlim)
+                    prev [i] = -1;
+                else
                 {
-                    const std::string vert_to = vert_name [j],
-                        vert_from = vert_name [static_cast <size_t> (prev [j])];
-                    const std::string two_verts = "f" + vert_from + "t" + vert_to;
-
-                    if (d [j] < INFINITE_DOUBLE)
-                    {
-                        double exp_jk = exp (-d [j] / k);
-                        expsum  += exp_jk;
-                        flows_i [j] += dens [ir] * exp_jk;
-                    }
+                    has_prev [i] = true;
+                    if (prev [i] > -1)
+                        prev_set.emplace (prev [i]);
                 }
-            } // end for j
-            if (expsum > tol)
-                for (size_t j = 0; j < nverts; j++)
-                    output [j] += flows_i [j] / expsum;
+            }
+            double expsum = 0.0, n = 0.0;
+            for (unsigned int j = 0; j < nverts; j++)
+            {
+                if (has_prev [j] && prev_set.find (j) == prev_set.end ())
+                {
+                    expsum += d [i];
+                    n += 1.0;
+                }
+                    //output [i] += d [i];
+            }
+            // calculate average exposure from that point:
+            if (n > 0.0)
+                output [i] += expsum / n;
         } // end for i
     } // end parallel function operator
 
@@ -839,8 +843,8 @@ Rcpp::NumericVector rcpp_flows_exposure (const Rcpp::DataFrame graph,
     Rcpp::NumericVector id_vec;
     const size_t nfrom = static_cast <size_t> (fromi.size ());
 
-    std::vector <std::string> from = graph ["from"];
-    std::vector <std::string> to = graph ["to"];
+    std::vector <std::string> from = graph [".vx0"];
+    std::vector <std::string> to = graph [".vx1"];
     std::vector <double> dist = graph ["d"];
     std::vector <double> wt = graph ["d_weighted"];
 

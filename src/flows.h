@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <set>
 #include <algorithm> // std::fill, std::reverse
 #include <iostream>
 #include <fstream>
