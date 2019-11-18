@@ -42,13 +42,6 @@ exposure_centrality <- function (net)
     net$d_weighted <- net$time_weighted
     net_c <- dodgr::dodgr_contract_graph (net)
 
-    dist_threshold <- .Machine$double.xmax
-    edges <- TRUE # hard-coded for edge-based centrality
-
-    gr_cols <- dodgr_graph_cols (net_c)
-    vert_map <- make_vert_map (net_c, gr_cols)
-    graph <- convert_graph (net_c, gr_cols)
-
     message ("\r", cli::col_green (cli::symbol$tick,
              "  Prepared network "))
     message (cli::col_blue (cli::symbol$pointer),
@@ -56,7 +49,8 @@ exposure_centrality <- function (net)
 
     # final '0' is for sampling calculation to estimate speed - non-zero values
     # used only in 'estimate_centrality_time'
-    net_c$centrality <- rcpp_centrality (graph, vert_map, dist_threshold, edges, 0)
+    net_c <- dodgr::dodgr_centrality  (net_c, contract = FALSE,
+                                       edges = TRUE)
 
     message ("\r", cli::col_green (cli::symbol$tick,
              "  Calculated centrality "))
@@ -76,8 +70,14 @@ disperse_emissions <- function (net_p, net_v, dispersal = 20)
                 dodgr::dodgr_vertices (net_p))
     v <- v [match (unique (v$id), v$id), ]
     # append net_v centrality values to v:
-    indxf <- match (v$id, net_v$.vx0)
-    indxt <- match (v$id, net_v$.vx1)
+    if ("from_id" %in% names (net_v))
+    {
+        indxf <- match (v$id, net_v$from_id)
+        indxt <- match (v$id, net_v$to_id)
+    } else {
+        indxf <- match (v$id, net_v$.vx0)
+        indxt <- match (v$id, net_v$.vx1)
+    }
     indxf [is.na (indxf)] <- indxt [is.na (indxf)]
     indxt [is.na (indxt)] <- indxf [is.na (indxt)]
     v$centrality <- apply (cbind (net_v$centrality [indxf],
@@ -101,18 +101,19 @@ disperse_emissions <- function (net_p, net_v, dispersal = 20)
         stats::optimise (minf, c (0, 0.1), xy0)$minimum
     }
     sig <- dist_to_lonlat_range (v, d = dispersal)
-    d <- spatstat::density.ppp (xy, weights = v$centrality, sigma = sig,
-                                at = "points")
-    vsum <- sum (v$centrality)
-    d <- d * vsum / sum (d)
-    indx <- which (d > v$centrality)
-    v$centrality [indx] <- d [indx]
-    v$centrality <- v$centrality * vsum / sum (v$centrality)
+    v$exposure <- spatstat::density.ppp (xy, weights = v$centrality,
+                                         sigma = sig, at = "points")
 
     # Then map those vertex values back onto net_p
-    indxf <- match (net_p$.vx0, v$id)
-    indxt <- match (net_p$.vx1, v$id)
-    fmax <- apply (cbind (v$centrality [indxf], v$centrality [indxt]), 1, max)
+    if ("from_id" %in% names (net_v))
+    {
+        indxf <- match (net_p$from_id, v$id)
+        indxt <- match (net_p$to_id, v$id)
+    } else {
+        indxf <- match (net_p$.vx0, v$id)
+        indxt <- match (net_p$.vx1, v$id)
+    }
+    fmax <- apply (cbind (v$exposure [indxf], v$exposure [indxt]), 1, max)
     net_p$exposure <- fmax
 
     message ("\r", cli::col_green (cli::symbol$tick,

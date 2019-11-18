@@ -10,67 +10,6 @@ rcpp_centrality <- function(graph, vert_map_in, dist_threshold, edge_centrality,
     .Call(`_exposure_rcpp_centrality`, graph, vert_map_in, dist_threshold, edge_centrality, sample)
 }
 
-#' rcpp_flows_aggregate_par
-#'
-#' @param graph The data.frame holding the graph edges
-#' @param vert_map_in map from <std::string> vertex ID to (0-indexed) integer
-#' index of vertices
-#' @param fromi Index into vert_map_in of vertex numbers
-#' @param toi Index into vert_map_in of vertex numbers
-#' @param tol Relative tolerance in terms of flows below which targets
-#' (to-vertices) are not considered.
-#'
-#' @note The parallelisation is achieved by dumping the results of each thread
-#' to a file, with aggregation performed at the end by simply reading back and
-#' aggregating all files. There is no way to aggregate into a single vector
-#' because threads have to be independent. The only danger with this approach
-#' is that multiple threads may generate the same file names, but with names 10
-#' characters long, that chance should be 1 / 62 ^ 10.
-#'
-#' @noRd
-rcpp_flows_aggregate_par <- function(graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol) {
-    .Call(`_exposure_rcpp_flows_aggregate_par`, graph, vert_map_in, fromi, toi_in, flows, norm_sums, tol)
-}
-
-#' rcpp_flows_disperse_par
-#'
-#' Modified version of \code{rcpp_flows_aggregate} that aggregates flows to all
-#' destinations from given set of origins, with flows attenuated by distance
-#' from those origins.
-#'
-#' @param graph The data.frame holding the graph edges
-#' @param vert_map_in map from <std::string> vertex ID to (0-indexed) integer
-#' index of vertices
-#' @param fromi Index into vert_map_in of vertex numbers
-#' @param k Coefficient of (current proof-of-principle-only) exponential
-#' distance decay function.  If value of \code{k<0} is given, a standard
-#' logistic polynomial will be used.
-#'
-#' @note The flow data to be used for aggregation is a matrix mapping flows
-#' betwen each pair of from and to points.
-#'
-#' @noRd
-rcpp_flows_disperse_par <- function(graph, vert_map_in, fromi, k, dens, tol) {
-    .Call(`_exposure_rcpp_flows_disperse_par`, graph, vert_map_in, fromi, k, dens, tol)
-}
-
-#' rcpp_flows_si
-#'
-#' @param graph The data.frame holding the graph edges
-#' @param vert_map_in map from <std::string> vertex ID to (0-indexed) integer
-#' index of vertices
-#' @param fromi Index into vert_map_in of vertex numbers
-#' @param toi Index into vert_map_in of vertex numbers
-#' @param kvec Vector of k-values for each fromi
-#' @param nvec Vector of density-values for each fromi
-#' @param tol Relative tolerance in terms of flows below which targets
-#' (to-vertices) are not considered.
-#'
-#' @noRd
-rcpp_flows_si <- function(graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol) {
-    .Call(`_exposure_rcpp_flows_si`, graph, vert_map_in, fromi, toi_in, kvec, dens_from, dens_to, norm_sums, tol)
-}
-
 #' rcpp_flows_exposure
 #'
 #' @param graph The data.frame holding the graph edges
